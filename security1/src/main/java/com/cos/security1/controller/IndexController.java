@@ -2,15 +2,18 @@ package com.cos.security1.controller;
 
 import javax.annotation.Resource;
 
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cos.security1.config.auth.PrincipalDetails;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 
@@ -23,6 +26,15 @@ public class IndexController {
 	@Autowired
 	private BCryptPasswordEncoder bcrypt;
 
+	@ResponseBody
+	@GetMapping("/test/login")
+	public String loginTest(Authentication authentication) {
+		System.out.println("/test/login===================");
+		PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+		System.out.println("authentication : " + principalDetails);
+		return "세션정보확인";
+	}
+	
 	@GetMapping({"","/"})
 	public String index() {
 		//머스테치 기본폴더 src/main/resources

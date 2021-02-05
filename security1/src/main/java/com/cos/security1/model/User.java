@@ -17,7 +17,9 @@ import lombok.Data;
 @Entity
 @Table(name = "User")
 public class User implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
 	@Id // primary key
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -25,6 +27,8 @@ public class User implements Serializable {
 	private String password;
 	private String email;
 	private String role; //ROLE_USER, ROLE_ADMIN
+	private String provider;
+	private String providerId;
 	@CreationTimestamp
 	private Timestamp createDate;
 }
