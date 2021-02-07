@@ -11,10 +11,13 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "User")
 public class User implements Serializable {
 	
@@ -31,4 +34,18 @@ public class User implements Serializable {
 	private String providerId;
 	@CreationTimestamp
 	private Timestamp createDate;
+	
+	@Builder
+	public User(String username, String password, String email, String role, String provider, String providerId,
+			Timestamp createDate) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.role = role;
+		this.provider = provider;
+		this.providerId = providerId;
+		this.createDate = createDate;
+	}
+	
 }

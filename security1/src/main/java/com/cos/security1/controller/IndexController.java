@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,10 +31,21 @@ public class IndexController {
 
 	@ResponseBody
 	@GetMapping("/test/login")
-	public String loginTest(Authentication authentication) {
+	public String loginTest(Authentication authentication, @AuthenticationPrincipal PrincipalDetails userDetails) {//DI(의존성 주입)
 		System.out.println("/test/login===================");
 		PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-		System.out.println("authentication : " + principalDetails);
+		System.out.println("authentication : " + principalDetails.getUser());
+		System.out.println("userDetails : " + userDetails.getUser());
+		return "세션정보확인";
+	}
+	
+	@ResponseBody
+	@GetMapping("/test/oauth/login")
+	public String testOauthLogin(Authentication authentication, @AuthenticationPrincipal OAuth2User oauth) {//DI(의존성 주입)
+		System.out.println("/test/login===================");
+		OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+		System.out.println("authentication : " + oAuth2User.getAttributes());
+		System.out.println("oAuth2User : " + oauth.getAttributes());
 		return "세션정보확인";
 	}
 	
@@ -41,9 +55,13 @@ public class IndexController {
 		//뷰리졸버 설정 :  prefix: /templates/, suffix: .mustache 생략가능
 		return "index"; //src/main/resources/templates/index.mustache
 	}
+	
+	// OAuth 로그인을 해도 PrincipalDetails로 받음
+	// 일반로그인을 해도 PrincipalDetails로 받음
 	@ResponseBody
 	@GetMapping("/user")
-	public String user() {
+	public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		System.out.println("PrincipalDetails : " + principalDetails);
 		return "user";
 	}
 	@ResponseBody
